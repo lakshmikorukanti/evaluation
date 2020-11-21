@@ -70,6 +70,7 @@ export default function Home(props) {
     const handleLogout = (e) => {
         dispatch(logoutUser(e));
     };
+
     console.log(data, params);
     if (!isAuth) {
         return <Redirect to="/" />;
@@ -179,19 +180,21 @@ export default function Home(props) {
                         ) : null}
                     </Grid>
                     <Grid item container lg={12} justify="center">
-                        {array.map((a, index) => (
-                            <Button
-                                className={classes.mainGrid}
-                                key={index}
-                                value={index + 1}
-                                variant="contained"
-                                style={{ marginLeft: '10px' }}
-                                color="secondary"
-                                onClick={(e) => setParams({ ...params, page: index + 1 })}
-                            >
-                                {index + 1}
-                            </Button>
-                        ))}
+                        {params.name != '' ? (
+                            array.map((a, index) => (
+                                <Button
+                                    className={classes.mainGrid}
+                                    key={index}
+                                    value={index + 1}
+                                    variant="contained"
+                                    style={{ marginLeft: '10px' }}
+                                    color="secondary"
+                                    onClick={(e) => setParams({ ...params, page: index + 1 })}
+                                >
+                                    {index + 1}
+                                </Button>
+                            ))
+                        ) : null}
                     </Grid>
                 </Grid>
             </Grid>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TextField } from '@material-ui/core';
-const Edit = ({ handleAdd }) => {
+const Edit = ({ handleAdd, data, handleProfile }) => {
     const [ name, setName ] = useState('');
     const [ quantity, setQuantity ] = useState('');
     const handleChange = (e) => {

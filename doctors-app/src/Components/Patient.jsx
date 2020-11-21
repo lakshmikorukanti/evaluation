@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
@@ -20,6 +21,9 @@ const useStyles = makeStyles((theme) => ({
     },
     link: {
         textDecoration: 'none'
+    },
+    button: {
+        margin: '10px'
     }
 }));
 
@@ -28,16 +32,21 @@ export default function PollingStations(props) {
     const [ status, setStatus ] = useState(false);
     const classes = useStyles();
     const [ data, setData ] = useState([]);
-    useEffect(() => {
-        axios
-            .get(`http://localhost:5000/api/patients/Id?id=${id}`)
-            .then((res) => {
-                setData([ res.data ]);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }, []);
+    const { email } = useSelector((state) => state.auth);
+    console.log(email);
+    useEffect(
+        () => {
+            axios
+                .get(`http://localhost:5000/api/patients/Id?id=${id}`)
+                .then((res) => {
+                    setData([ res.data ]);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+        [ email ]
+    );
     const handleDelete = (id) => {
         console.log(id);
         data[0].medicins = data[0].medicins.filter((a) => a._id != id);
@@ -50,6 +59,16 @@ export default function PollingStations(props) {
         setStatus(!status);
         data[0].medicins.push({ name: name, quantity: quantity });
         setData([ ...data ]);
+    };
+    const handleProfile = (data) => {
+        axios({
+            method: 'post',
+            url: 'http://localhost:5000/user/addToData',
+            data: {
+                data,
+                email
+            }
+        });
     };
     console.log(data, data.length);
     return (
@@ -78,12 +97,24 @@ export default function PollingStations(props) {
                                     ) : null}
                                 </Grid>
                             ) : null}
-                            <button onClick={handleAddPage}>Add new Medicine</button>
-                            {status == true ? <Edit handleAdd={handleAdd} /> : null}
+                            <button className={classes.button} onClick={handleAddPage}>
+                                Add new Medicine
+                            </button>
+                            {status == true ? (
+                                <Edit handleAdd={handleAdd} handleProfile={handleProfile} data={data} />
+                            ) : null}
+                            <Grid>
+                                <Link to="/ProfileData">
+                                    <button className={classes.button} onClick={() => handleProfile(data)}>
+                                        Add to profile
+                                    </button>
+                                </Link>
+                            </Grid>
                         </Paper>
                     </Grid>
                 </Grid>
             </Grid>
+
             <Link to={'/Home'} className={classes.link}>
                 <Button variant="contained" color="secondary">
                     Go Back

@@ -2,6 +2,7 @@ import { LOGIN_USER_REQUEST, LOGIN_USER_SUCCESS, LOGIN_USER_FAILURE, LOGOUT_USER
 
 let initState = {
     isLoading: false,
+    email: '',
     error: false,
     message: '',
     isAuth: false,
@@ -21,6 +22,7 @@ const authReducer = (state = initState, { type, payload }) => {
         case LOGIN_USER_SUCCESS:
             return {
                 ...state,
+                email: payload.auth,
                 isLoading: false,
                 error: false,
                 isAuth: true,
@@ -39,6 +41,7 @@ const authReducer = (state = initState, { type, payload }) => {
             console.log(payload);
             return {
                 ...state,
+                email: '',
                 isAuth: false,
                 error: false,
                 message: 'Logout Successful!',
